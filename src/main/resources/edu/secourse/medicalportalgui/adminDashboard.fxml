@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="edu.secourse.medicalportalgui.controller.AdminDashboardController"
+      prefWidth="1000" prefHeight="700">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label fx:id="welcomeLabel" text="Welcome, Admin" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #ff4444; -fx-text-fill: white;"/>
+    </HBox>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="User Management">
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <HBox spacing="10">
+                    <Button text="Create User" onAction="#handleCreateUser"/>
+                    <Button text="Update User" onAction="#handleUpdateUser"/>
+                    <Button text="Delete User" onAction="#handleDeleteUser" style="-fx-text-fill: red;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="Refresh" onAction="#loadUsers"/>
+                </HBox>
+                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colUserId" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="colFirstName" text="First Name" prefWidth="150"/>
+                        <TableColumn fx:id="colLastName" text="Last Name" prefWidth="150"/>
+                        <TableColumn fx:id="colUsername" text="Username" prefWidth="120"/>
+                        <TableColumn fx:id="colRole" text="Role" prefWidth="100"/>
+                        <TableColumn fx:id="colLastLogin" text="Last Login" prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <Tab text="Appointment Management">
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <HBox spacing="10">
+                    <Button text="New Appointment" onAction="#handleCreateAppointment"/>
+                    <Button text="Edit Appointment" onAction="#handleUpdateAppointment"/>
+                    <Button text="Cancel Appointment" onAction="#handleDeleteAppointment" style="-fx-text-fill: red;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="Refresh" onAction="#loadAppointments"/>
+                </HBox>
+                <TableView fx:id="appointmentsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colAppointmentId" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="colStartTime" text="Start" prefWidth="80"/>
+                        <TableColumn fx:id="colEndTime" text="End" prefWidth="80"/>
+                        <TableColumn fx:id="colPatient" text="Patient" prefWidth="150"/>
+                        <TableColumn fx:id="colDoctor" text="Doctor" prefWidth="150"/>
+                        <TableColumn fx:id="colLastUpdated" text="Last Updated" prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

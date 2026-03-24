@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="10" alignment="TOP_CENTER"
+      fx:controller="edu.secourse.medicalportalgui.controller.DoctorDashboardController"
+      prefWidth="800" prefHeight="600">
+
+    <!-- Title -->
+    <Label text="Doctor Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- Welcome label -->
+    <Label fx:id="welcomeLabel" text="Welcome, Doctor"/>
+
+    <!-- Appointment Table -->
+    <TableView fx:id="appointmentsTable" prefHeight="400" prefWidth="750">
+        <columns>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="colStartTime" text="Start Time" prefWidth="100"/>
+            <TableColumn fx:id="colEndTime" text="End Time" prefWidth="100"/>
+            <TableColumn fx:id="colPatient" text="Patient" prefWidth="200"/>
+            <TableColumn fx:id="colLastUpdated" text="Last Updated" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Buttons -->
+    <HBox spacing="10">
+        <Button text="Refresh" onAction="#handleRefreshAppointments"/>
+        <Button text="Logout" onAction="#handleLogout"/>
+    </HBox>
+
+</VBox>
