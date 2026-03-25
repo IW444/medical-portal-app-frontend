@@ -2,6 +2,7 @@ package edu.secourse.medicalportalgui.controller;
 
 import edu.secourse.medicalportalgui.model.Appointment;
 import edu.secourse.medicalportalgui.model.User;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URI;
@@ -39,6 +41,23 @@ public class PatientDashboardController {
     private TableColumn<Appointment, String> colDoctor;
     @FXML
     private TableColumn<Appointment, String> colLastUpdated;
+
+    //copied directly from the AdminDashboardController
+    @FXML
+    public void initialize()
+    {
+        // Appointments Table Column Mapping
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colStartTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        colEndTime.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        colLastUpdated.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+
+        // Extracting names from User objects within the Appointment
+        colDoctor.setCellValueFactory(cellData -> {
+            User d = cellData.getValue().getDoctor();
+            return new SimpleStringProperty(d != null ? d.getFirstName() + " " + d.getLastName() : "N/A");
+        });
+    }
 
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper()
