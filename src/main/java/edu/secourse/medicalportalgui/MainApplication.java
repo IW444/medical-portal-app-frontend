@@ -18,6 +18,9 @@ public class MainApplication extends Application {
 
         stage.setTitle("Medical Portal");
         stage.setScene(scene);
+
+        stage.sizeToScene();
+
         stage.show();
     }
 
