@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="10" alignment="CENTER"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="edu.secourse.medicalportalgui.controller.LoginController">
+<StackPane prefWidth="450" prefHeight="400" style="-fx-background-color: #f0f2f5;"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="edu.secourse.medicalportalgui.controller.LoginController">
 
-    <Label text="Login"/>
+    <VBox spacing="20" alignment="CENTER" maxWidth="350" maxHeight="320"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
 
-    <TextField fx:id="usernameField" promptText="Username"/>
-    <PasswordField fx:id="passwordField" promptText="Password"/>
-    <Button text="Login" onAction="#handleLogin"/>
-</VBox>
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
+
+        <Label text="✚" style="-fx-font-size: 40px; -fx-text-fill: #3498db;"/>
+
+        <VBox spacing="5" alignment="CENTER">
+            <Label text="Medical Portal" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+                <font>
+                    <Font size="22.0" />
+                </font>
+            </Label>
+            <Label text="Please sign in to continue" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+        </VBox>
+
+        <VBox spacing="15">
+            <VBox spacing="5">
+                <Label text="Username" style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                <TextField fx:id="usernameField" promptText="Enter your username"
+                           style="-fx-pref-height: 35; -fx-background-color: #f8f9fa; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Password" style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                <PasswordField fx:id="passwordField" promptText="Enter your password"
+                               style="-fx-pref-height: 35; -fx-background-color: #f8f9fa; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+            </VBox>
+        </VBox>
+
+        <Button text="Sign In" onAction="#handleLogin" defaultButton="true"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 200; -fx-pref-height: 40; -fx-background-radius: 5; -fx-cursor: hand;"/>
+
+    </VBox>
+</StackPane>

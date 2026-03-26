@@ -254,14 +254,41 @@ public class AdminDashboardController {
             stage.setTitle("Medical Portal");
             //Change the scene back to the login screen
             stage.setScene(new Scene(root));
-            //Keep the window the same size
-            stage.setWidth(400);
-            stage.setHeight(300);
+
+            stage.sizeToScene();
+            stage.centerOnScreen();
         }
         //Need to handle exceptions because the loader might throw one.  This takes a general exception and prints the
         //trail of methods that led to the error.
         catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleChangePassword() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/changePassword.fxml"));
+            Parent root = loader.load();
+
+            ChangePasswordController controller = loader.getController();
+
+            // Pass the Admin's user object to the popup
+            if (loggedInUser != null) {
+                controller.setUser(loggedInUser);
+
+                Stage stage = new Stage();
+                stage.setTitle("Change Admin Password");
+                stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(root));
+
+                // Ensure proper window sizing
+                stage.sizeToScene();
+                stage.showAndWait();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Could not open password update form.").showAndWait();
         }
     }
 }

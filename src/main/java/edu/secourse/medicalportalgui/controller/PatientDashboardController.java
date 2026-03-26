@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -139,14 +141,49 @@ public class PatientDashboardController {
             stage.setTitle("Medical Portal");
             //Change the scene back to the login screen
             stage.setScene(new Scene(root));
-            //Keep the window the same size
-            stage.setWidth(400);
-            stage.setHeight(300);
+
+            stage.sizeToScene();
+            stage.centerOnScreen();
         }
         //Need to handle exceptions because the loader might throw one.  This takes a general exception and prints the
         //trail of methods that led to the error.
         catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleChangePassword() {
+        try {
+            // 1. Load the shared Change Password FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/changePassword.fxml"));
+            Parent root = loader.load();
+
+            // 2. Get the controller and pass the current logged-in patient
+            ChangePasswordController controller = loader.getController();
+
+            // This 'loggedInUser' must be the one you set during the login transition
+            if (loggedInUser != null) {
+                controller.setUser(loggedInUser);
+
+                // 3. Setup and show the modal window
+                Stage stage = new Stage();
+                stage.setTitle("Update Your Security Settings");
+                stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(root));
+
+                // Optional: Match the window size to the content
+                stage.sizeToScene();
+
+                stage.showAndWait();
+            } else {
+                System.err.println("Error: No logged-in user found to update.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load the password update form.");
+            alert.showAndWait();
         }
     }
 }

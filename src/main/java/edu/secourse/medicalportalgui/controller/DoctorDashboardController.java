@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -117,13 +118,34 @@ public class DoctorDashboardController {
             stage.setTitle("Medical Portal");
             //Change the scene back to the login screen
             stage.setScene(new Scene(root));
-            //Keep the window the same size
-            stage.setWidth(400);
-            stage.setHeight(300);
+
+            stage.sizeToScene();
+            stage.centerOnScreen();
         }
         //Need to handle exceptions because the loader might throw one.  This takes a general exception and prints the
         //trail of methods that led to the error.
         catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleChangePassword() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/changePassword.fxml"));
+            Parent root = loader.load();
+
+            // Pass the current logged-in user to the popup controller
+            ChangePasswordController controller = loader.getController();
+            controller.setUser(loggedInUser);
+
+            Stage stage = new Stage();
+            stage.setTitle("Change Password");
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
