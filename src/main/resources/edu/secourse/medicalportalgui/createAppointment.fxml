@@ -19,23 +19,23 @@
     <Label text="Create Appointment" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
     <GridPane hgap="10" vgap="10">
-        <!--TODO--find out how to make a calendar-->
+        <!--TODO: find out how to make a calendar-->
         <Label text="Appointment Date:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="dateField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <!--TODO--make a time (hour, minutes (maybe in 15 minute blocks))-->
+        <!--TODO: make a time (hour, minutes (maybe in 15 minute blocks))-->
         <Label text="Start Time" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="startTimeField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="startTimeComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
 
-        <!--TODO--make a time (hour, minutes (maybe in 15 minute blocks))-->
+        <!--TODO: make a time (hour, minutes (maybe in 15 minute blocks))-->
         <Label text="End Time" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <TextField fx:id="endTimeField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="endTimeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
 
         <Label text="Patient Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="patientComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="patientComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
 
         <Label text="Doctor Name:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="doctorComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="doctorComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="200"/>
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
