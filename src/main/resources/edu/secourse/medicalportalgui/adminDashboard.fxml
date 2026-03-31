@@ -33,8 +33,18 @@
                     <Button text="Update User" onAction="#handleUpdateUser"/>
                     <Button text="Delete User" onAction="#handleDeleteUser" style="-fx-text-fill: red;"/>
                     <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Search Users:"/>
+                    <TextField fx:id="searchUserField" promptText="Filter by name..." prefWidth="200"/>
+
+                    <Label text="Filter by Role:"/>
+                    <ComboBox fx:id="roleFilterCombo" prefWidth="150" promptText="All Roles"/>
+
+                    <Region HBox.hgrow="ALWAYS" />
                     <Button text="Refresh" onAction="#loadUsers"/>
                 </HBox>
+
                 <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colUserId" text="ID" prefWidth="50"/>
