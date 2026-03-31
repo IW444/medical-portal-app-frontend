@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -159,6 +160,8 @@ public class AdminDashboardController {
             Stage stage = new Stage();
             stage.setTitle("Register New User");
 
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Register-user-icon.png")));
+
             // Wait until the form is closed
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
@@ -279,6 +282,8 @@ public class AdminDashboardController {
 
                 Stage stage = new Stage();
                 stage.setTitle("Change Admin Password");
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/change-password-icon.png")));
+
                 stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(root));
 

@@ -4,6 +4,7 @@ module edu.secourse.medicalportalgui {
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires java.desktop;
 
     opens edu.secourse.medicalportalgui.model to com.fasterxml.jackson.databind, javafx.base;
     opens edu.secourse.medicalportalgui to javafx.fxml;
