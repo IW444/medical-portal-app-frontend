@@ -23,6 +23,7 @@ public class CreateUserController {
 
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private User existingUser;
 
     @FXML
     public void initialize() {
@@ -32,34 +33,59 @@ public class CreateUserController {
 
     }
 
+    public void setExistingUser(User user) {
+        this.existingUser = user;
+        // Pre-fill the form
+        firstNameField.setText(user.getFirstName());
+        lastNameField.setText(user.getLastName());
+        usernameField.setText(user.getUsername());
+        roleComboBox.setValue(user.getRole());
+    }
+
 
     @FXML
     private void handleSave() {
         if (isInputValid()) {
             try {
-                // Create a User object to hold the form data
-                User newUser = new User();
-                newUser.setFirstName(firstNameField.getText());
-                newUser.setLastName(lastNameField.getText());
-                newUser.setUsername(usernameField.getText());
-                newUser.setPassword(passwordField.getText());
-                newUser.setRole(roleComboBox.getValue());
+                // 1. Create the data object
+                User userToSave = new User();
+                userToSave.setFirstName(firstNameField.getText());
+                userToSave.setLastName(lastNameField.getText());
+                userToSave.setUsername(usernameField.getText());
+                userToSave.setRole(roleComboBox.getValue());
 
-                String json = mapper.writeValueAsString(newUser);
+                // 2. Only set password if the Admin actually typed one
+                String passInput = passwordField.getText();
+                if (passInput != null && !passInput.isEmpty()) {
+                    userToSave.setPassword(passInput);
+                }
 
+                // 3. Determine if this is a New User (POST) or Update (PUT)
+                String url = "http://localhost:8080/users";
+                String method = "POST";
+
+                if (existingUser != null) {
+                    url += "/" + existingUser.getUserId();
+                    method = "PUT";
+                }
+
+                // 4. Send the request
+                String json = mapper.writeValueAsString(userToSave);
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("http://localhost:8080/users"))
+                        .uri(URI.create(url))
                         .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(json))
+                        .method(method, HttpRequest.BodyPublishers.ofString(json))
                         .build();
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() == 200 || response.statusCode() == 201) {
+                // 5. Handle the result
+                if (response.statusCode() >= 200 && response.statusCode() < 300) {
                     closeWindow();
                 } else {
-                    showError("Server Error", "Could not create user. Status: " + response.statusCode());
+                    showError("Server Error", "Operation failed. Status: " + response.statusCode());
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 showError("Connection Error", "Could not reach the server.");
@@ -68,11 +94,35 @@ public class CreateUserController {
     }
 
     private boolean isInputValid() {
-        if (firstNameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-            showError("Validation Error", "Please fill in all required fields.");
+        String errorMessage = "";
+
+        if (firstNameField.getText() == null || firstNameField.getText().isEmpty()) {
+            errorMessage += "No valid first name!\n";
+        }
+        if (lastNameField.getText() == null || lastNameField.getText().isEmpty()) {
+            errorMessage += "No valid last name!\n";
+        }
+        if (usernameField.getText() == null || usernameField.getText().isEmpty()) {
+            errorMessage += "No valid username!\n";
+        }
+        if (roleComboBox.getValue() == null) {
+            errorMessage += "No valid role selected!\n";
+        }
+
+        // THE CONDITIONAL FIX:
+        // Only require password if we are NOT editing an existing user
+        if (existingUser == null) {
+            if (passwordField.getText() == null || passwordField.getText().isEmpty()) {
+                errorMessage += "No valid password!\n";
+            }
+        }
+
+        if (errorMessage.isEmpty()) {
+            return true;
+        } else {
+            showError("Invalid Fields", errorMessage);
             return false;
         }
-        return true;
     }
 
     @FXML
