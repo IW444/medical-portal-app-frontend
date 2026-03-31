@@ -6,11 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import javafx.scene.image.Image;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import javafx.scene.image.Image;
 
 public class CreateUserController {
 
@@ -28,7 +29,9 @@ public class CreateUserController {
         // Add roles to the dropdown
         roleComboBox.getItems().addAll("ADMIN", "DOCTOR", "PATIENT");
         roleComboBox.setValue("PATIENT"); // Default value
+
     }
+
 
     @FXML
     private void handleSave() {
