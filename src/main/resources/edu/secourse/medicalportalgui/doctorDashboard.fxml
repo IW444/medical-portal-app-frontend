@@ -27,11 +27,12 @@
 
             <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
                 <Label text="View Schedule:" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-                <ToggleButton text="Today" selected="true">
+                <!--Today is the default button to retrieve appointments by -->
+                <ToggleButton fx:id="todayButton" text="Today" selected="true" onAction="#handleViewAppointments">
                     <toggleGroup><ToggleGroup fx:id="filterGroup"/></toggleGroup>
                 </ToggleButton>
-                <ToggleButton text="This Week" toggleGroup="$filterGroup"/>
-                <ToggleButton text="This Month" toggleGroup="$filterGroup"/>
+                <ToggleButton fx:id="weekButton" text="This Week" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
+                <ToggleButton fx:id="monthButton" text="This Month" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
 
                 <Region HBox.hgrow="ALWAYS" />
 
