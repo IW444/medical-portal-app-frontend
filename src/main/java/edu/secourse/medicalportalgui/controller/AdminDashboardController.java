@@ -140,6 +140,8 @@ public class AdminDashboardController {
 
             if (response.statusCode() == 200) {
                 Appointment[] appointments = mapper.readValue(response.body(), Appointment[].class);
+                allAppointments = FXCollections.observableArrayList(appointments);
+                appointmentsTable.setItems(allAppointments);
                 ObservableList<Appointment> appointmentList = FXCollections.observableArrayList(appointments);
                 appointmentsTable.setItems(appointmentList);
             }
@@ -297,6 +299,12 @@ public class AdminDashboardController {
     }
 
     @FXML
+    private TextField appointmentSearchField;
+
+    // Stores the full unfiltered list
+    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+
+    @FXML
     private void handleLogout() {
         try{
             //Find the login screen from our files
@@ -349,5 +357,45 @@ public class AdminDashboardController {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Could not open password update form.").showAndWait();
         }
+    }
+
+    @FXML
+    private void handleAppointmentSearch() {
+        String keyword = appointmentSearchField.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            appointmentsTable.setItems(allAppointments);
+            return;
+        }
+
+        ObservableList<Appointment> filtered = allAppointments.filtered(appointment -> {
+            //Search by patient username
+            String patientUsername = "";
+            if (appointment.getPatient() != null) {
+                patientUsername = appointment.getPatient().getUsername().toLowerCase();
+            }
+
+            // Search by doctor username
+            String doctorUsername = "";
+            if (appointment.getDoctor() != null) {
+                doctorUsername = appointment.getDoctor().getUsername().toLowerCase();
+            }
+
+            return patientUsername.contains(keyword) || doctorUsername.contains(keyword);
+        });
+
+        appointmentsTable.setItems(filtered);
+
+        if (filtered.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION,
+                    "No appointments found for \"" + appointmentSearchField.getText() + "\"")
+                    .showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleClearAppointmentSearch() {
+        appointmentSearchField.clear();
+        appointmentsTable.setItems(allAppointments);
     }
 }
