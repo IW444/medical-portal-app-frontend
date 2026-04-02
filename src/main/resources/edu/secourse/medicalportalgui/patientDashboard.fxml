@@ -36,6 +36,13 @@
 
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Your Appointments" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <!--Future is the default button to retrieve appointments by -->
+                <ToggleButton fx:id="futureButton" text="Future" selected="true" onAction="#handleViewAppointments">
+                    <toggleGroup><ToggleGroup fx:id="filterGroup"/></toggleGroup>
+                </ToggleButton>
+                <ToggleButton fx:id="pastButton" text="Past" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
+
+
                 <Region HBox.hgrow="ALWAYS" />
                 <Button text="Refresh List" onAction="#handleRefreshAppointments"
                         style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
