@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -42,6 +43,14 @@ public class DoctorDashboardController {
     private TableColumn<Appointment, String> colPatient;
     @FXML
     private TableColumn<Appointment, String> colLastUpdated;
+
+    @FXML
+    private ToggleButton todayButton;
+    @FXML
+    private ToggleButton weekButton;
+    @FXML
+    private ToggleButton monthButton;
+
 
     //copied directly from the AdminDashboardController
     @FXML
@@ -147,6 +156,39 @@ public class DoctorDashboardController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private void loadAppointmentsByDateFilter(String filter) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/appointments/doctor/" + loggedInUser.getUserId() + "/" + filter))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                Appointment[] appointments = mapper.readValue(response.body(), Appointment[].class);
+                ObservableList<Appointment> doctorAppointments = FXCollections.observableArrayList(appointments);
+                appointmentsTable.setItems(doctorAppointments);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleViewAppointments() {
+        if (todayButton.isSelected()) {
+            loadAppointmentsByDateFilter("today");
+        }
+        else if (weekButton.isSelected()) {
+            loadAppointmentsByDateFilter("week");
+        }
+        else if (monthButton.isSelected()) {
+            loadAppointmentsByDateFilter("month");
         }
     }
 }
