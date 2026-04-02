@@ -206,24 +206,74 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
     }
-
-    // CRUD Buttons for Appointments
     @FXML
     private void handleCreateAppointment() {
-        // TODO: Open modal or FXML for new appointment
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/edu/secourse/medicalportalgui/createAppointment.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("New Appointment");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Patient-Portal-icon.png")));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            loadAppointments(); // Refresh table after saving
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Could not load appointment form.").showAndWait();
+        }
     }
 
     @FXML
     private void handleUpdateAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
-        // TODO: Open modal to edit selected appointment
+        if (selected == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select an appointment to edit.").showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/edu/secourse/medicalportalgui/createAppointment.fxml"));
+            Parent root = loader.load();
+
+            // Pass selected appointment data to the form
+            AppointmentFormController controller = loader.getController();
+            controller.setAppointment(selected);
+
+            Stage stage = new Stage();
+            stage.setTitle("Edit Appointment");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Patient-Portal-icon.png")));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            loadAppointments(); // Refresh table after editing
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Could not load appointment form.").showAndWait();
+        }
     }
 
     @FXML
     private void handleDeleteAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+        if (selected == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select an appointment to cancel.").showAndWait();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to cancel this appointment?",
+                ButtonType.YES, ButtonType.NO);
+        confirm.showAndWait();
+
+        if (confirm.getResult() != ButtonType.YES) return;
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -235,10 +285,14 @@ public class AdminDashboardController {
 
             if (response.statusCode() == 204) {
                 appointmentsTable.getItems().remove(selected);
+            } else {
+                new Alert(Alert.AlertType.ERROR,
+                        "Could not cancel appointment. Status: " + response.statusCode()).showAndWait();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Connection error.").showAndWait();
         }
     }
 
