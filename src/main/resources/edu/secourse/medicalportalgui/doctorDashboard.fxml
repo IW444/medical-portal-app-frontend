@@ -33,6 +33,8 @@
                 </ToggleButton>
                 <ToggleButton fx:id="weekButton" text="This Week" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
                 <ToggleButton fx:id="monthButton" text="This Month" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
+                <ToggleButton fx:id="futureButton" text="Future" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
+                <ToggleButton fx:id="pastButton" text="Past" toggleGroup="$filterGroup" onAction="#handleViewAppointments"/>
 
                 <Region HBox.hgrow="ALWAYS" />
 
