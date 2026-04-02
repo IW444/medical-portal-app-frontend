@@ -1,45 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<!--Vbox creates a box that aligns the fields vertically -->
 <?import javafx.geometry.Insets?>
-<VBox spacing="15" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="edu.secourse.medicalportalgui.controller.CreateAppointmentController"
-      prefWidth="400" alignment="CENTER">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
 
-    <Label text="Create Appointment" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="edu.secourse.medicalportalgui.controller.AppointmentFormController"
+      prefWidth="400">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="New Appointment" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
 
     <GridPane hgap="10" vgap="10">
-        <!--TODO: find out how to make a calendar-->
         <Label text="Appointment Date:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <!--TODO: make a time (hour, minutes (maybe in 15 minute blocks))-->
-        <Label text="Start Time" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="startTimeComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="Start Time (HH:MM):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="startTimeField" promptText="09:00" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <!--TODO: make a time (hour, minutes (maybe in 15 minute blocks))-->
-        <Label text="End Time" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="endTimeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="End Time (HH:MM):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="endTimeField" promptText="10:00" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Label text="Patient Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="patientComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="Patient:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="patientComboBox" promptText="Select Patient"
+                  prefWidth="200" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <Label text="Doctor Name:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="doctorComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="Doctor:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="doctorComboBox" promptText="Select Doctor"
+                  prefWidth="200" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     </GridPane>
 
-    <HBox spacing="10" alignment="CENTER_RIGHT">
+    <HBox spacing="10" style="-fx-alignment: center-right;">
         <Button text="Cancel" onAction="#handleCancel"/>
-        <Button text="Save Appointment" onAction="#handleSave" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Save" onAction="#handleSave" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
     </HBox>
 </VBox>
