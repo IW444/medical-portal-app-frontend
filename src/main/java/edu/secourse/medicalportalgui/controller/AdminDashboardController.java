@@ -303,7 +303,30 @@ public class AdminDashboardController {
     // CRUD Buttons for Appointments
     @FXML
     private void handleCreateAppointment() {
-        // TODO: Open modal or FXML for new appointment
+        try {
+            // Load the FXML we created for the popup
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/createAppointment.fxml"));
+            Parent root = loader.load();
+
+            // Setup the new window (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Create New Appointment");
+
+            // Wait until the form is closed
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+
+            // Wait for the admin to finish before continuing
+            stage.showAndWait();
+
+            // Refresh the table so the new appointment appears immediately
+            loadAppointments();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not load the creation form.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
