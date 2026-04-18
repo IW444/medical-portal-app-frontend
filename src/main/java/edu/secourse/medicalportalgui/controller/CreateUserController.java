@@ -82,6 +82,11 @@ public class CreateUserController {
                 // 5. Handle the result
                 if (response.statusCode() >= 200 && response.statusCode() < 300) {
                     closeWindow();
+                } else if (response.statusCode() == 409) {
+                    // Highlight the username field in red
+                    usernameField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+                    showError("Username Taken",
+                            "The username \"" + usernameField.getText() + "\" is already in use.\nPlease choose a different username.");
                 } else {
                     showError("Server Error", "Operation failed. Status: " + response.statusCode());
                 }

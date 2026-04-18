@@ -87,9 +87,10 @@ public class AdminDashboardController {
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
+        // Standard PropertyValueFactory works for basic types
         colLastLogin.setCellValueFactory(new PropertyValueFactory<>("lastLogin"));
 
-        // 3. APPOINTMENT TABLE SETUP: Column Mappings
+        // Appointments Table Column Mapping
         colAppointmentId.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colStartTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
@@ -189,6 +190,8 @@ public class AdminDashboardController {
 
             if (response.statusCode() == 200) {
                 Appointment[] appointments = mapper.readValue(response.body(), Appointment[].class);
+                allAppointments = FXCollections.observableArrayList(appointments);
+                appointmentsTable.setItems(allAppointments);
                 ObservableList<Appointment> appointmentList = FXCollections.observableArrayList(appointments);
                 appointmentsTable.setItems(appointmentList);
             }
@@ -315,8 +318,6 @@ public class AdminDashboardController {
             // Wait until the form is closed
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-
-            // Wait for the admin to finish before continuing
             stage.showAndWait();
 
             // Refresh the table so the new appointment appears immediately
@@ -332,14 +333,49 @@ public class AdminDashboardController {
     @FXML
     private void handleUpdateAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
-        // TODO: Open modal to edit selected appointment
+        if (selected == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select an appointment to edit.").showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/edu/secourse/medicalportalgui/createAppointment.fxml"));
+            Parent root = loader.load();
+
+            // Pass selected appointment data to the form
+            AppointmentFormController controller = loader.getController();
+            controller.setAppointment(selected);
+
+            Stage stage = new Stage();
+            stage.setTitle("Edit Appointment");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Patient-Portal-icon.png")));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            loadAppointments(); // Refresh table after editing
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Could not load appointment form.").showAndWait();
+        }
     }
 
     @FXML
     private void handleDeleteAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+        if (selected == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select an appointment to cancel.").showAndWait();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to cancel this appointment?",
+                ButtonType.YES, ButtonType.NO);
+        confirm.showAndWait();
+
+        if (confirm.getResult() != ButtonType.YES) return;
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -351,12 +387,22 @@ public class AdminDashboardController {
 
             if (response.statusCode() == 204) {
                 appointmentsTable.getItems().remove(selected);
+            } else {
+                new Alert(Alert.AlertType.ERROR,
+                        "Could not cancel appointment. Status: " + response.statusCode()).showAndWait();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Connection error.").showAndWait();
         }
     }
+
+    @FXML
+    private TextField appointmentSearchField;
+
+    // Stores the full unfiltered list
+    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
     @FXML
     private void handleLogout() {
@@ -427,5 +473,45 @@ public class AdminDashboardController {
 
             return matchesRole && matchesSearch;
         });
+    }
+
+    @FXML
+    private void handleAppointmentSearch() {
+        String keyword = appointmentSearchField.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            appointmentsTable.setItems(allAppointments);
+            return;
+        }
+
+        ObservableList<Appointment> filtered = allAppointments.filtered(appointment -> {
+            //Search by patient username
+            String patientUsername = "";
+            if (appointment.getPatient() != null) {
+                patientUsername = appointment.getPatient().getUsername().toLowerCase();
+            }
+
+            // Search by doctor username
+            String doctorUsername = "";
+            if (appointment.getDoctor() != null) {
+                doctorUsername = appointment.getDoctor().getUsername().toLowerCase();
+            }
+
+            return patientUsername.contains(keyword) || doctorUsername.contains(keyword);
+        });
+
+        appointmentsTable.setItems(filtered);
+
+        if (filtered.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION,
+                    "No appointments found for \"" + appointmentSearchField.getText() + "\"")
+                    .showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleClearAppointmentSearch() {
+        appointmentSearchField.clear();
+        appointmentsTable.setItems(allAppointments);
     }
 }

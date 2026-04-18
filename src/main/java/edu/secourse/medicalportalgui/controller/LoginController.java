@@ -46,6 +46,9 @@ public class LoginController {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("Status: " + response.statusCode());
+            System.out.println("Body: " + response.body());
+
             if (response.statusCode() == 200) {
                 // Convert response to User object
                 User user = mapper.readValue(response.body(), User.class);

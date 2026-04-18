@@ -50,6 +50,10 @@ public class DoctorDashboardController {
     private ToggleButton weekButton;
     @FXML
     private ToggleButton monthButton;
+    @FXML
+    private ToggleButton pastButton;
+    @FXML
+    private ToggleButton futureButton;
 
 
     //copied directly from the AdminDashboardController
@@ -189,6 +193,12 @@ public class DoctorDashboardController {
         }
         else if (monthButton.isSelected()) {
             loadAppointmentsByDateFilter("month");
+        }
+        else if (pastButton.isSelected()) {
+            loadAppointmentsByDateFilter("past");
+        }
+        else if (futureButton.isSelected()) {
+            loadAppointmentsByDateFilter("future");
         }
     }
 }

@@ -7,10 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +40,11 @@ public class PatientDashboardController {
     private TableColumn<Appointment, String> colDoctor;
     @FXML
     private TableColumn<Appointment, String> colLastUpdated;
+
+    @FXML
+    private ToggleButton pastButton;
+    @FXML
+    private ToggleButton futureButton;
 
     //copied directly from the AdminDashboardController
     @FXML
@@ -184,6 +186,35 @@ public class PatientDashboardController {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load the password update form.");
             alert.showAndWait();
+        }
+    }
+
+    private void loadAppointmentsByDateFilter(String filter) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/appointments/patient/" + loggedInUser.getUserId() + "/" + filter))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                Appointment[] appointments = mapper.readValue(response.body(), Appointment[].class);
+                ObservableList<Appointment> patientAppointments = FXCollections.observableArrayList(appointments);
+                appointmentsTable.setItems(patientAppointments);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleViewAppointments() {
+        if (pastButton.isSelected()) {
+            loadAppointmentsByDateFilter("past");
+        }
+        else if (futureButton.isSelected()) {
+            loadAppointmentsByDateFilter("future");
         }
     }
 }
