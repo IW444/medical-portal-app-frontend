@@ -81,7 +81,6 @@ public class AdminDashboardController {
 
         filteredData = new FilteredList<>(masterUserData, p -> true);
 
-        // 2. TABLE SETUP: Link columns to User model properties
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -108,19 +107,14 @@ public class AdminDashboardController {
             return new SimpleStringProperty(d != null ? d.getFirstName() + " " + d.getLastName() : "N/A");
         });
 
-        // 4. UI COMPONENT SETUP: Fill the dropdown options
         roleFilterCombo.getItems().clear();
         roleFilterCombo.getItems().addAll("ALL", "PATIENT", "DOCTOR", "ADMIN");
 
-        // 5. ATTACH LISTENERS: Now that filteredData is initialized, it's safe to listen
         searchUserField.textProperty().addListener((obs, oldVal, newVal) -> updateFilter());
         roleFilterCombo.valueProperty().addListener((obs, oldVal, newVal) -> updateFilter());
 
-        // 6. FINALIZING: Set table items and trigger initial load
         usersTable.setItems(filteredData);
 
-        // Setting the value "ALL" will trigger updateFilter() once,
-        // which is fine now because filteredData exists.
         roleFilterCombo.setValue("ALL");
 
         loadUsers();
@@ -146,18 +140,16 @@ public class AdminDashboardController {
                     .GET()
                     .build();
 
-            // We use sendAsync to keep the UI from freezing during the network call
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenAccept(response -> {
                         if (response.statusCode() == 200) {
                             try {
                                 User[] users = mapper.readValue(response.body(), User[].class);
 
-                                // CRITICAL: UI updates must happen on the JavaFX Application Thread
                                 Platform.runLater(() -> {
                                     masterUserData.setAll(users);
                                     updateFilter();
-                                    System.out.println("Successfully loaded " + users.length + " users.");
+                                    //System.out.println("Successfully loaded " + users.length + " users.");
                                 });
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -208,7 +200,6 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/createUser.fxml"));
             Parent root = loader.load();
 
-            // Setup the new window (Stage)
             Stage stage = new Stage();
             stage.setTitle("Register New User");
 
@@ -243,9 +234,8 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/createUser.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and "Load" the selected user data into it
             CreateUserController controller = loader.getController();
-            controller.setExistingUser(selectedUser); // You'll need to add this method to CreateUserController
+            controller.setExistingUser(selectedUser);
 
             Stage stage = new Stage();
             stage.setTitle("Edit User: " + selectedUser.getUsername());
@@ -279,7 +269,6 @@ public class AdminDashboardController {
                             .DELETE()
                             .build();
 
-                    // USE ASYNC: Don't freeze the UI while waiting for the server
                     client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                             .thenAccept(resp -> {
                                 if (resp.statusCode() == 200 || resp.statusCode() == 204) {
@@ -311,11 +300,9 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/createAppointment.fxml"));
             Parent root = loader.load();
 
-            // Setup the new window (Stage)
             Stage stage = new Stage();
             stage.setTitle("Create New Appointment");
 
-            // Wait until the form is closed
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
             stage.showAndWait();
@@ -423,8 +410,7 @@ public class AdminDashboardController {
             stage.sizeToScene();
             stage.centerOnScreen();
         }
-        //Need to handle exceptions because the loader might throw one.  This takes a general exception and prints the
-        //trail of methods that led to the error.
+
         catch (Exception e) {
             e.printStackTrace();
         }
