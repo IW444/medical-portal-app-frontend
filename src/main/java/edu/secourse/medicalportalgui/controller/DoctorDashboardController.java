@@ -23,6 +23,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * Controller for the Doctor Dashboard.
+ * Manages the doctor-specific functionality available after login, including
+ * viewing appointments filtered by current date, week, or month OR by past or future
+ * and refreshing the appointment list.
+ */
 public class DoctorDashboardController {
 
     private User loggedInUser;
@@ -56,7 +62,13 @@ public class DoctorDashboardController {
     private ToggleButton futureButton;
 
 
-    //copied directly from the AdminDashboardController
+    /**
+     * Initializes the Doctor Dashboard by configuring the appointment table columns
+     * using the defaults.
+     * Sets up cell value factories for date, time, and patient name display.
+     * Called automatically by JavaFX when the FXML is loaded.
+     * Note:  Copied directly from the AdminDashboardController
+     */
     @FXML
     public void initialize()
     {
@@ -77,17 +89,31 @@ public class DoctorDashboardController {
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
+    /**
+     * Sets the logged-in user and initializes the dashboard for that doctor.
+     * Displays a personalized welcome message using the doctor's title and first name
+     * and loads their appointments.
+     * @param user the currently logged-in doctor
+     */
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
         welcomeLabel.setText("Welcome, Dr. " + user.getFirstName());
         loadAppointments();
     }
 
+    /**
+     * Refreshes the appointment list by reloading all appointments from the backend.
+     * Returns the table to its default unfiltered view.
+     */
     @FXML
     private void handleRefreshAppointments() {
         loadAppointments();
     }
 
+    /**
+     * Loads all appointments from the backend and filters them to show
+     * only appointments belonging to the currently logged-in doctor.
+     */
     private void loadAppointments() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -116,6 +142,9 @@ public class DoctorDashboardController {
         }
     }
 
+    /**
+     * Logs out the current doctor and returns to the login screen.
+     */
     @FXML
     private void handleLogout() {
         try{
@@ -142,6 +171,10 @@ public class DoctorDashboardController {
         }
     }
 
+    /**
+     * Opens the Change Password dialog for the logged-in doctor.
+     * Passes the current user to the ChangePasswordController to handle the update.
+     */
     @FXML
     private void handleChangePassword() {
         try {
@@ -164,6 +197,11 @@ public class DoctorDashboardController {
     }
 
 
+    /**
+     * Loads appointments for the logged-in doctor filtered by date range.
+     * Calls the backend API with the specified filter type.
+     * @param filter the date filter to apply ("today", "current week", "current month", "past", or "future")
+     */
     private void loadAppointmentsByDateFilter(String filter) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -183,6 +221,11 @@ public class DoctorDashboardController {
         }
     }
 
+    /**
+     * Handles the toggle button selection for filtering appointments by date.
+     * Determines which filter to apply based on which toggle button is selected
+     * and calls loadAppointmentsByDateFilter() with the appropriate parameter.
+     */
     @FXML
     private void handleViewAppointments() {
         if (todayButton.isSelected()) {
