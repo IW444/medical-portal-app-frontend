@@ -27,7 +27,8 @@ import java.net.http.HttpResponse;
 
 /**
  * Controller class for the Administrator Dashboard.
- * Handles user management (CRUD), appointment management, and real-time filtering.
+ * Handles user management and appointment management done by the admin.
+ * Displays all users and appointments in the database.
  */
 public class AdminDashboardController {
 
