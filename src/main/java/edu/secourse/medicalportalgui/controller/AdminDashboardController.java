@@ -25,57 +25,93 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * Controller class for the Administrator Dashboard.
+ * Handles user management (CRUD), appointment management, and real-time filtering.
+ */
 public class AdminDashboardController {
 
+    /** The list of users retrieved from the database. */
     private final ObservableList<User> masterUserData = FXCollections.observableArrayList();
+    /** A wrapper around the list that allows for searching and filtering. */
     private FilteredList<User> filteredData;
 
+    /** The currently authenticated admin using the dashboard. */
     private User loggedInUser;
-
+    /** HTTP client for performing API calls to the  backend. */
     private final HttpClient client = HttpClient.newHttpClient();
+
+    /** Mapper used to convert JSON responses into Java objects */
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
-    // ------------------ Users Table ------------------
+    /** TableView component for listing user records. */
     @FXML
     private TableView<User> usersTable;
+    /** Column displaying the unique ID of a user. */
     @FXML
     private TableColumn<User, Integer> colUserId;
+    /** Column displaying the user's first name. */
     @FXML
     private TableColumn<User, String> colFirstName;
+    /** Column displaying the user's last name. */
     @FXML
     private TableColumn<User, String> colLastName;
+    /** Column displaying the unique system username. */
     @FXML
     private TableColumn<User, String> colUsername;
+    /** Column displaying the user's assigned role (Admin, Doctor, Patient). */
     @FXML
     private TableColumn<User, String> colRole;
+    /** Column displaying the timestamp of the user's last login. */
     @FXML
     private TableColumn<User, String> colLastLogin;
+    /** Text field for filtering users by name or username. */
+    @FXML private TextField searchUserField;
 
-    // ------------------ Appointments Table ------------------
+    /** TableView component for listing appointments. */
     @FXML
     private TableView<Appointment> appointmentsTable;
+    /** Column displaying the unique appointment ID. */
     @FXML
     private TableColumn<Appointment, Integer> colAppointmentId;
+    /** Column displaying the scheduled date of the appointment. */
     @FXML
     private TableColumn<Appointment, String> colDate;
+    /** Column displaying the scheduled start time. */
     @FXML
     private TableColumn<Appointment, String> colStartTime;
+    /** Column displaying the scheduled end time. */
     @FXML
     private TableColumn<Appointment, String> colEndTime;
+    /** Column displaying the patient's full name. */
     @FXML
     private TableColumn<Appointment, String> colPatient;
+    /** Column displaying the assigned doctor's full name. */
     @FXML
     private TableColumn<Appointment, String> colDoctor;
+    /** Column displaying when the appointment record was last modified. */
     @FXML
     private TableColumn<Appointment, String> colLastUpdated;
 
+    /** Label used to display a personalized welcome message to the admin. */
     @FXML
     private Label welcomeLabel;
 
+    /** Dropdown for filtering users by their specific role. */
     @FXML private ComboBox<String> roleFilterCombo;
 
+    /** Text field for searching appointments by doctor or patient names. */
+    @FXML
+    private TextField appointmentSearchField;
 
+    /** The full list of appointments. */
+    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+
+    /**
+     * Initializes the controller class. Sets up table column mappings,
+     * UI listeners for filtering, and dropdown options.
+     */
     @FXML
     public void initialize() {
 
@@ -120,6 +156,10 @@ public class AdminDashboardController {
         loadUsers();
     }
 
+    /**
+     * Sets the currently logged-in administrator and triggers data loading.
+     * @param user The User object representing the logged-in admin.
+     */
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
         if (welcomeLabel != null) {
@@ -129,9 +169,9 @@ public class AdminDashboardController {
         loadAppointments();
     }
 
-    // Loading Users
-    @FXML private TextField searchUserField; // Add this variable
-
+    /**
+     * Fetches all users from the backend API asynchronously.
+     */
     @FXML
     private void loadUsers() {
         try {
@@ -169,7 +209,9 @@ public class AdminDashboardController {
         }
     }
 
-    // Load Appointments
+    /**
+     * Fetches all appointments from the backend API.
+     */
     @FXML
     private void loadAppointments() {
         try {
@@ -192,7 +234,9 @@ public class AdminDashboardController {
         }
     }
 
-    // CRUD Buttons for Users
+    /**
+     * Opens a form to create a new user.
+     */
     @FXML
     private void handleCreateUser() {
         try {
@@ -222,6 +266,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Opens a form to update the currently selected user.
+     */
     @FXML
     private void handleUpdateUser() {
         User selectedUser = usersTable.getSelectionModel().getSelectedItem();
@@ -249,6 +296,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Deletes the selected user from the backend after confirmation.
+     */
     @FXML
     private void handleDeleteUser() {
         User selectedUser = usersTable.getSelectionModel().getSelectedItem();
@@ -292,7 +342,9 @@ public class AdminDashboardController {
         });
     }
 
-    // CRUD Buttons for Appointments
+    /**
+     * Opens a form to create a new appointment.
+     */
     @FXML
     private void handleCreateAppointment() {
         try {
@@ -317,6 +369,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Opens a form to edit the selected appointment.
+     */
     @FXML
     private void handleUpdateAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
@@ -349,6 +404,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Deletes the selected appointment from the system.
+     */
     @FXML
     private void handleDeleteAppointment() {
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
@@ -385,12 +443,10 @@ public class AdminDashboardController {
         }
     }
 
-    @FXML
-    private TextField appointmentSearchField;
-
-    // Stores the full unfiltered list
-    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-
+    /**
+     * Switches the application view back to the login screen
+     * after the current admin logs out.
+     */
     @FXML
     private void handleLogout() {
         try{
@@ -416,6 +472,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Opens the Change Password dialog for the logged-in user.
+     * Passes the current user to the ChangePasswordController to handle the update.
+     */
     @FXML
     private void handleChangePassword() {
         try {
@@ -444,6 +504,10 @@ public class AdminDashboardController {
             new Alert(Alert.AlertType.ERROR, "Could not open password update form.").showAndWait();
         }
     }
+
+    /**
+     * Logic for filtering the User TableView based on role and search text.
+     */
     private void updateFilter() {
         String searchText = (searchUserField.getText() == null) ? "" : searchUserField.getText().toLowerCase().trim();
         String roleFilter = roleFilterCombo.getValue();
@@ -461,6 +525,9 @@ public class AdminDashboardController {
         });
     }
 
+    /**
+     * Filters the Appointment TableView based on doctor or patient username keywords.
+     */
     @FXML
     private void handleAppointmentSearch() {
         String keyword = appointmentSearchField.getText().trim().toLowerCase();
@@ -495,6 +562,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Resets the appointment search field and restores the full list.
+     */
     @FXML
     private void handleClearAppointmentSearch() {
         appointmentSearchField.clear();
