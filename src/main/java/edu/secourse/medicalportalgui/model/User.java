@@ -14,6 +14,7 @@ public class User {
     private String password;
     private String role; // THIS MUST MATCH BACKEND JSON EXACTLY
     private LocalDateTime lastLogin;
+    private LocalDateTime lastPasswordChange;
 
     public User() {}
 
@@ -43,4 +44,7 @@ public class User {
 
     public LocalDateTime getLastLogin() { return lastLogin; }
     public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+
+    public LocalDateTime getLastPasswordChange() { return lastPasswordChange; }
+    public void setLastPasswordChange(LocalDateTime lastPasswordChange) { this.lastPasswordChange = lastPasswordChange; }
 }
