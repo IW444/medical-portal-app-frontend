@@ -67,8 +67,12 @@ public class AdminDashboardController {
     /** Column displaying the timestamp of the user's last login. */
     @FXML
     private TableColumn<User, String> colLastLogin;
+    /** Column displaying the timestamp of the user's last password change. */
+    @FXML
+    private TableColumn<User, String> colPasswordChange;
     /** Text field for filtering users by name or username. */
-    @FXML private TextField searchUserField;
+    @FXML
+    private TextField searchUserField;
 
     /** TableView component for listing appointments. */
     @FXML
@@ -125,6 +129,7 @@ public class AdminDashboardController {
         colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
         // Standard PropertyValueFactory works for basic types
         colLastLogin.setCellValueFactory(new PropertyValueFactory<>("lastLogin"));
+        colPasswordChange.setCellValueFactory(new PropertyValueFactory<>("lastPasswordChange"));
 
         // Appointments Table Column Mapping
         colAppointmentId.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
