@@ -1,0 +1,5 @@
+module:edu.secourse.medicalportalgui
+edu.secourse.medicalportalgui
+edu.secourse.medicalportalgui.api
+edu.secourse.medicalportalgui.controller
+edu.secourse.medicalportalgui.model
