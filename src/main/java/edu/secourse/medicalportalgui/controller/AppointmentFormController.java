@@ -18,21 +18,62 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JavaFX controller for the appointment creation and editing form.
+ *
+ * <p>Handles user input for scheduling appointments, including date and
+ * time selection, patient and doctor assignment, and form validation.
+ * Communicates with the REST backend over HTTP to create ({@code POST})
+ * or update ({@code PUT}) appointment records.</p>
+ *
+ * <p>When {@link #appointmentId} is {@code null}, the form operates in
+ * <em>create</em> mode. When pre-populated via {@link #setAppointment},
+ * it operates in <em>edit</em> mode and issues a {@code PUT} request instead.</p>
+ */
 public class AppointmentFormController {
 
+    /** Date picker for selecting the appointment date. Past dates are disabled. */
     @FXML private DatePicker datePicker;
+
+    /** Text field for the appointment start time in {@code HH:MM} format. */
     @FXML private TextField startTimeField;
+
+    /** Text field for the appointment end time in {@code HH:MM} format. */
     @FXML private TextField endTimeField;
+
+    /** Dropdown listing all users with the {@code PATIENT} role. */
     @FXML private ComboBox<String> patientComboBox;
+
+    /** Dropdown listing all users with the {@code DOCTOR} role. */
     @FXML private ComboBox<String> doctorComboBox;
 
+    /** Shared HTTP client used for all REST calls to the backend. */
     private final HttpClient client = HttpClient.newHttpClient();
+
+    /**
+     * JSON mapper configured with {@link JavaTimeModule} to correctly
+     * serialize and deserialize {@link java.time.LocalDate} and
+     * {@link java.time.LocalTime} values.
+     */
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule());
 
-    private List<User> allUsers;   // full user list from server
+    /** Full list of users fetched from the server, used for username lookup. */
+    private List<User> allUsers;
+
+    /**
+     * The ID of the appointment being edited, or {@code null} when
+     * creating a new appointment.
+     */
     private Integer appointmentId = null;
 
+    /**
+     * Initializes the form after FXML injection is complete.
+     *
+     * <p>Disables past dates in the {@link DatePicker} by applying a custom
+     * {@code DayCellFactory}, then fetches all users from the backend and
+     * populates the patient and doctor dropdowns accordingly.</p>
+     */
     @FXML
     public void initialize() {
         datePicker.setDayCellFactory(picker -> new DateCell() {
@@ -40,8 +81,8 @@ public class AppointmentFormController {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 if (date.isBefore(LocalDate.now())) {
-                    setDisable(true);       // can't click it
-                    setStyle("-fx-background-color: #e0e0e0;"); // grayed out
+                    setDisable(true);
+                    setStyle("-fx-background-color: #e0e0e0;");
                 }
             }
         });
@@ -49,6 +90,16 @@ public class AppointmentFormController {
         loadUsersIntoDropdowns();
     }
 
+    /**
+     * Fetches all users from {@code GET /users} and populates the
+     * patient and doctor {@link ComboBox} dropdowns.
+     *
+     * <p>Users are filtered by role: those with role {@code PATIENT} go
+     * into {@link #patientComboBox}, and those with role {@code DOCTOR}
+     * go into {@link #doctorComboBox}. On a non-200 response or a
+     * network failure, an error dialog is shown and the dropdowns
+     * remain empty.</p>
+     */
     private void loadUsersIntoDropdowns() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -61,13 +112,11 @@ public class AppointmentFormController {
             if (response.statusCode() == 200) {
                 allUsers = Arrays.asList(mapper.readValue(response.body(), User[].class));
 
-                // Patients: users with role PATIENT
                 List<String> patients = allUsers.stream()
                         .filter(u -> "PATIENT".equalsIgnoreCase(u.getRole()))
                         .map(u -> u.getUsername())
                         .collect(Collectors.toList());
 
-                // Doctors: users with role DOCTOR
                 List<String> doctors = allUsers.stream()
                         .filter(u -> "DOCTOR".equalsIgnoreCase(u.getRole()))
                         .map(u -> u.getUsername())
@@ -82,7 +131,12 @@ public class AppointmentFormController {
         }
     }
 
-    // Helper: find User object by username
+    /**
+     * Looks up a {@link User} object from the cached user list by username.
+     *
+     * @param username the username to search for
+     * @return the matching {@link User}, or {@code null} if not found
+     */
     private User getUserByUsername(String username) {
         return allUsers.stream()
                 .filter(u -> u.getUsername().equals(username))
@@ -90,26 +144,47 @@ public class AppointmentFormController {
                 .orElse(null);
     }
 
-    // Called when editing an existing appointment
+    /**
+     * Pre-populates the form fields with data from an existing appointment.
+     *
+     * <p>Calling this method switches the form into <em>edit</em> mode.
+     * When the user saves, a {@code PUT} request is sent to update the
+     * existing record rather than creating a new one.</p>
+     *
+     * @param appointment the {@link Appointment} whose data should be loaded into the form
+     */
     public void setAppointment(Appointment appointment) {
         this.appointmentId = appointment.getAppointmentId();
         datePicker.setValue(appointment.getDate());
         startTimeField.setText(appointment.getStartTime() != null ? appointment.getStartTime().toString() : "");
         endTimeField.setText(appointment.getEndTime() != null ? appointment.getEndTime().toString() : "");
 
-        // Pre-select the username in dropdowns
         if (appointment.getPatient() != null)
             patientComboBox.setValue(appointment.getPatient().getUsername());
         if (appointment.getDoctor() != null)
             doctorComboBox.setValue(appointment.getDoctor().getUsername());
     }
 
+    /**
+     * Handles the Save button action.
+     *
+     * <p>Validates all form fields first via {@link #isInputValid()}. If
+     * validation passes, builds a JSON payload with the selected date,
+     * times, patient ID, and doctor ID, then sends either:</p>
+     * <ul>
+     *   <li>{@code POST /appointments} — when creating a new appointment</li>
+     *   <li>{@code PUT /appointments/{id}} — when editing an existing appointment</li>
+     * </ul>
+     *
+     * <p>Closes the window on {@code 200} or {@code 201}. Shows an error
+     * dialog on {@code 409 Conflict} (scheduling clash) or any other
+     * non-success status code. Also handles network failures gracefully.</p>
+     */
     @FXML
     private void handleSave() {
         if (!isInputValid()) return;
 
         try {
-            // Get User objects from selected usernames
             User patient = getUserByUsername(patientComboBox.getValue());
             User doctor  = getUserByUsername(doctorComboBox.getValue());
             String dateStr = datePicker.getValue().toString();
@@ -144,14 +219,8 @@ public class AppointmentFormController {
 
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 closeWindow();
-            } else {
-                showError("Server Error", "Status: " + response.statusCode());
-            }
-
-            if (response.statusCode() == 200 || response.statusCode() == 201) {
-                closeWindow();
             } else if (response.statusCode() == 409) {
-                showError("Time Conflict", response.body()); // shows "Doctor already has an appointment..." etc.
+                showError("Time Conflict", response.body());
             } else {
                 showError("Server Error", "Status: " + response.statusCode());
             }
@@ -162,8 +231,25 @@ public class AppointmentFormController {
         }
     }
 
+    /**
+     * Validates all form inputs before a save is attempted.
+     *
+     * <p>Checks the following rules and highlights any invalid field
+     * with a red border:</p>
+     * <ul>
+     *   <li>Date must be selected and must not be in the past</li>
+     *   <li>Start time must match the pattern {@code HH:MM}</li>
+     *   <li>End time must match the pattern {@code HH:MM}</li>
+     *   <li>A patient must be selected from the dropdown</li>
+     *   <li>A doctor must be selected from the dropdown</li>
+     * </ul>
+     *
+     * <p>If any rule fails, an error dialog listing all issues is shown
+     * via {@link #showError}.</p>
+     *
+     * @return {@code true} if all inputs are valid; {@code false} otherwise
+     */
     private boolean isInputValid() {
-        // Clear previous error styles
         datePicker.setStyle("");
         startTimeField.setStyle("");
         endTimeField.setStyle("");
@@ -173,7 +259,6 @@ public class AppointmentFormController {
         boolean valid = true;
         StringBuilder errorMsg = new StringBuilder("Please fix the following:\n");
 
-        // DatePicker validation — no format checking needed
         if (datePicker.getValue() == null) {
             datePicker.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
             errorMsg.append("• Please select an appointment date\n");
@@ -209,14 +294,30 @@ public class AppointmentFormController {
         return valid;
     }
 
+    /**
+     * Handles the Cancel button action by closing the form window
+     * without saving any changes.
+     */
     @FXML
     private void handleCancel() { closeWindow(); }
 
+    /**
+     * Closes the current stage (window) containing this form.
+     *
+     * <p>Retrieves the {@link Stage} from any FXML control's scene and
+     * calls {@link Stage#close()}.</p>
+     */
     private void closeWindow() {
         Stage stage = (Stage) datePicker.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Displays a modal error dialog to the user.
+     *
+     * @param title   the title bar text of the alert dialog
+     * @param message the body message describing the error
+     */
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
