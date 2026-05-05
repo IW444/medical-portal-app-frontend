@@ -17,7 +17,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/edu/secourse/medicalportalgui/login.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 400, 300);
+        Scene scene = new Scene(fxmlLoader.load());
 
         stage.setTitle("Medical Portal");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Patient-Portal-icon.png")));
