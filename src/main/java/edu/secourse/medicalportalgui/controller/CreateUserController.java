@@ -12,7 +12,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import javafx.scene.image.Image;
-
+/**
+ * Controller class for the Create User window.
+ * This class handles the logic for creating and updating a user
+ * by communicating with the backend REST API.
+ */
 public class CreateUserController {
 
     @FXML private TextField firstNameField;
@@ -25,6 +29,7 @@ public class CreateUserController {
     private final ObjectMapper mapper = new ObjectMapper();
     private User existingUser;
 
+/** This method handles a dropdown selection for a user role to be added */
     @FXML
     public void initialize() {
         // Add roles to the dropdown
@@ -32,7 +37,9 @@ public class CreateUserController {
         roleComboBox.setValue("PATIENT"); // Default value
 
     }
-
+/**This method allows for existing user information to be edited
+ * @param user
+ */
     public void setExistingUser(User user) {
         this.existingUser = user;
         // Pre-fill the form
@@ -42,7 +49,11 @@ public class CreateUserController {
         roleComboBox.setValue(user.getRole());
     }
 
-
+/**This method handles the saving system that connects the
+ * information input and syncs it with the REST API database.
+ * There is also error handling in the event that
+ * a username already exists or the server can't be connected to.
+ */
     @FXML
     private void handleSave() {
         if (isInputValid()) {
@@ -98,6 +109,9 @@ public class CreateUserController {
         }
     }
 
+/** This method verifies that information for users is entered correctly
+ * @return error messages associated with invalid data entry
+ */
     private boolean isInputValid() {
         String errorMessage = "";
 
@@ -130,6 +144,7 @@ public class CreateUserController {
         }
     }
 
+/** This method handles a close window functionality */
     @FXML
     private void handleCancel() {
         closeWindow();
@@ -140,6 +155,11 @@ public class CreateUserController {
         stage.close();
     }
 
+/** This method handles a visual aid for error handling where it will
+ * prompt the user with what is wrong on screen
+ * @param title
+ * @param content
+ */
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
