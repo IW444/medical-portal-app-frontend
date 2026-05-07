@@ -16,7 +16,12 @@ import java.net.http.HttpResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
-
+/**
+ * Controller class for the Login window.
+ * This class handles the logic and other necessary
+ * components for connecting a current user to their account
+ * by communicating with the backend REST API.
+ */
 public class LoginController {
 
     @FXML
@@ -29,6 +34,11 @@ public class LoginController {
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
+/** This method handles the login functionality from the main window
+ * by checking the given information against the REST API database
+ * and transferring the user to the correct dashboard based on their User Role.
+ * There is also error handling in the event that an incorrect username or password is submitted.
+ */
     @FXML
     private void handleLogin() {
         String username = usernameField.getText();
@@ -76,6 +86,10 @@ public class LoginController {
         }
 
     }
+
+/** This method handles the passing of user data to the required controller
+ * based on the user role of whoever has just logged in and brings the next window into view.
+ */
     private void navigateToDashboard(User user, String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/secourse/medicalportalgui/" + fxmlFile));
