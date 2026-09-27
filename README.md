@@ -1,1 +1,1 @@
-# OOSD2_Frontend
+# Medical Portal App Frontend
