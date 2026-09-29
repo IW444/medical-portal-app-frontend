@@ -89,7 +89,7 @@ The application manages patients in a doctor’s office, handling appointments, 
    
 **Diagram:**
 
-<img width="629" height="638" alt="image" src="https://github.com/user-attachments/assets/d2eb8536-3bc5-4ee4-84c6-bc0b3788d17c" />
+<img width="629" height="638" src="images/LogInDiagram.png" />
 
 
 ## Use Case: Change password
@@ -120,7 +120,7 @@ The application manages patients in a doctor’s office, handling appointments, 
 
 **Diagram:**
 
-<img width="512" height="600" alt="Change Password Use Case Diagram" src="https://github.com/user-attachments/assets/3f42abbc-b28c-445f-b30c-e5421a15fb9e" />
+<img width="512" height="600" alt="Change Password Use Case Diagram" src="images/ChangePasswordDiagram.png" />
 
 ## Use Case: Add New Patient
 
@@ -150,7 +150,7 @@ The application manages patients in a doctor’s office, handling appointments, 
 
 **Diagram:**
 
-<img width="612" height="770" alt="Add New Patient Use Case Diagram" src="https://github.com/user-attachments/assets/a8943149-6b0a-435c-b83b-cc4c668ffdaf" />
+<img width="612" height="770" alt="Add New Patient Use Case Diagram" src="images/AddNewPatientDiagram.png" />
 
 
 ## Use Case: Make New Appointment
@@ -177,7 +177,7 @@ The application manages patients in a doctor’s office, handling appointments, 
 
 **Diagram:**
 
-<img width="645" height="612" alt="Update Appointment Use Case Diagram" src="https://github.com/user-attachments/assets/37d128d2-b8ab-4672-ad3a-bae4a28eb1d5" />
+<img width="645" height="612" alt="Update Appointment Use Case Diagram" src="images/MakeNewAppointmentDiagram.png" />
 
 
 ## Use Case: Write a Referral
@@ -210,7 +210,7 @@ The application manages patients in a doctor’s office, handling appointments, 
 
 **Diagram:**
 
-<img width="680" height="536" alt="image" src="https://github.com/user-attachments/assets/51a2cf22-290f-49c9-b9f1-26d5bff5bf0e" />
+<img width="680" height="536" alt="image" src="images/WriteAReferralDiagram.png" />
 
 
 ## Use Case: Update Patient Information
@@ -248,7 +248,7 @@ The application manages patients in a doctor’s office, handling appointments, 
 
 **Diagram:**
 
-<img width="592" height="474" alt="image" src="https://github.com/user-attachments/assets/b97cf727-9555-4868-891d-f362dee38717" />
+<img width="592" height="474" alt="image" src="images/UpdatePatientInformationDiagram.png" />
 
 
 ## Use Case: View Medical Information
@@ -272,7 +272,7 @@ Before paying visit to the patient, doctor can take a look to patient detail his
 
 **Diagram:**
 
-<img width="527" height="518" alt="Screenshot 2025-12-03 151556" src="https://github.com/user-attachments/assets/325a2ffa-6fa5-4c11-a1eb-025d582782df" />
+<img width="527" height="518" alt="Screenshot 2025-12-03 151556" src="images/ViewMedicalInformationDiagram.png" />
 
 ## Use Case Name: Reschedule Appointment
 
@@ -298,7 +298,7 @@ Before paying visit to the patient, doctor can take a look to patient detail his
 
 **Diagram:**:
 
-<img width="612" height="612" alt="Reschedule Appointment Use Case Diagram" src="https://github.com/user-attachments/assets/f93a4214-fe5c-4900-88b0-6c12c01d2cdd" />
+<img width="612" height="612" alt="Reschedule Appointment Use Case Diagram" src="images/RescheduleAppointmentDiagram.png" />
 
 
 ## Use Case: Cancel Appointment
@@ -324,49 +324,49 @@ Before paying visit to the patient, doctor can take a look to patient detail his
 
 **Class Diagram**:
 
-<img width="454" height="591" alt="image" src="https://github.com/user-attachments/assets/60b72ee4-97e6-460d-bdca-4b6dff6e303b" />
+<img width="454" height="591" alt="image" src="images/CancelAppointmentDiagram.png" />
 
 
 ## CRC cards for the classes
-<img width="784" height="541" alt="User CRC Card" src="https://github.com/user-attachments/assets/e1cea597-621b-44a3-aaf9-b2ad5d6ebc89" />
-<img width="774" height="510" alt="Doctor CRC Card" src="https://github.com/user-attachments/assets/8da9bffa-c095-4591-bcf2-0dd6c53210f0" />
-<img width="772" height="327" alt="Patient CRC Card" src="https://github.com/user-attachments/assets/f5abe1b1-33da-4f9f-8826-acd5e042606f" />
-<img width="768" height="409" alt="Calendar CRC Card" src="https://github.com/user-attachments/assets/041d8039-f111-4e82-bf57-1e8ef1cd2ace" />
-<img width="780" height="388" alt="Admin CRC Card" src="https://github.com/user-attachments/assets/01abe2f3-02d5-4e26-adc8-406d524a3200" />
-<img width="775" height="367" alt="Welcome Page CRC Card" src="https://github.com/user-attachments/assets/e4eca473-db14-48c0-9be4-65b0837de42a" />
-<img width="772" height="441" alt="Login Window CRC Card" src="https://github.com/user-attachments/assets/37f00576-5c7d-4876-b0ff-53523fe659a7" />
-<img width="763" height="384" alt="Dashboard CRC Card" src="https://github.com/user-attachments/assets/fe80e8b2-0cc5-4551-8891-ceef89bbb9fb" />
-<img width="760" height="498" alt="Appointments CRC Card" src="https://github.com/user-attachments/assets/626cee8b-57c6-4c47-8036-4ec0da3ddf35" />
+<img width="760" height="498" alt="Appointments CRC Card" src="images/CRCAppointments.png" />
+<img width="784" height="541" alt="User CRC Card" src="images/CRCUser.png" />
+<img width="774" height="510" alt="Doctor CRC Card" src="images/CRCDoctor.png" />
+<img width="772" height="327" alt="Patient CRC Card" src="images/CRCPatient.png" />
+<img width="780" height="388" alt="Admin CRC Card" src="images/CRCAdmin.png" />
+<img width="768" height="409" alt="Calendar CRC Card" src="images/CRCCalendar.png" />
+<img width="775" height="367" alt="Welcome Page CRC Card" src="images/CRCWelcomePage.png" />
+<img width="772" height="441" alt="Login Window CRC Card" src="images/CRCLogInWindow.png" />
+<img width="763" height="384" alt="Dashboard CRC Card" src="images/CRCDashboard.png" />
 
 
 
 ## UML class diagram
-<img width="775" height="594" alt="UML Class Diagram" src="https://github.com/user-attachments/assets/3e0497fc-fe9c-4b33-82b7-a476aad68500" />
+<img width="775" height="594" alt="UML Class Diagram" src="images/UMLClassDiagram.png" />
 
 
 ## Mock-ups of the user interfaces
 
 **Main Window**:
 
-<img width="471" height="446" alt="Screenshot 2026-05-05 172224" src="https://github.com/user-attachments/assets/cf06e4fa-3f50-4f2e-b29f-166c5fb9b38c" />
+<img width="471" height="446" alt="Screenshot 2026-05-05 172224" src="images/MainWindowMockup.png" />
 
 
 
 **Admin Dashboard Viewing Users**:
 
-<img width="1054" height="716" alt="Screenshot 2026-05-05 172754" src="https://github.com/user-attachments/assets/d4a6ba34-c854-4671-b3cb-dd8d0d80af1f" />
+<img width="1054" height="716" alt="Screenshot 2026-05-05 172754" src="images/AdminDashboardMockup.png" />
 
 
 
 **Patient Dashboard**:
 
-<img width="929" height="655" alt="Screenshot 2026-05-05 172841" src="https://github.com/user-attachments/assets/ae2f2283-8bf2-4891-a3a8-7fcec44d70ad" />
+<img width="929" height="655" alt="Screenshot 2026-05-05 172841" src="images/PatientPortalMockup.png" />
 
 
 
 **Delete User Confirmation**:
 
-<img width="455" height="230" alt="Screenshot 2026-05-05 172819" src="https://github.com/user-attachments/assets/83c245a5-8260-48c3-b6eb-7f38d8d2b160" />
+<img width="455" height="230" alt="Screenshot 2026-05-05 172819" src="images/DeleteUserMockup.png" />
 
 
 
@@ -375,13 +375,13 @@ Before paying visit to the patient, doctor can take a look to patient detail his
 
 **Update Patient Medical Information**:
 
-<img width="1266" height="201" alt="DataFlowDiagramDetailedIMAGE drawio" src="https://github.com/user-attachments/assets/6864ce6a-c642-4b35-be0c-c276641543c5" />
+<img width="1266" height="201" alt="DataFlowDiagramDetailedIMAGE drawio" src="images/DataFlowDiagramUpdatePatientInfo.png" />
 
 
 **Register a New User**:
 
 
-<img width="691" height="277" alt="DataFlowDiagram1 drawio" src="https://github.com/user-attachments/assets/81bb798d-9201-491d-933b-47ec5315ee53" />
+<img width="691" height="277" alt="DataFlowDiagram1 drawio" src="images/DataFlowDiagramRegisterNewUser.png" />
 
 </details>
 
@@ -396,4 +396,5 @@ Before paying visit to the patient, doctor can take a look to patient detail his
 
 We used ChatGPT to learn about GitHub, troubleshooting, also understanding the concepts of API connection and database and also used to enhance the GUI.
 
+##
 ##
